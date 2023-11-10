@@ -4,6 +4,7 @@ from PIL import Image
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 import io
+from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
@@ -32,41 +33,34 @@ def predict_plant_potato(image_bytes, model, class_labels):
     img_array = np.array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
     result = model.predict(img_array)
-    predicted_class = class_labels[np.argmax(result)]
-    probability = float(np.max(result))
+    pred = np.argmax(result, axis=1)
+    predicted_class = class_labels[int(pred)]
+    probability = float(result[0, int(pred)])  # Extract the probability for the predicted class
     return predicted_class, probability
-
-
-def interpret_prediction(prediction, class_labels):
-    max_index = np.argmax(prediction)
-    max_class = class_labels[max_index]
-    max_probability = float(prediction[max_index])
-    interpreted_result = {"class": max_class, "probability": max_probability}
-    return interpreted_result
 
 @app.route('/')
 def home():
     return render_template('index.html')
 
-@app.route('/predict_tomato', methods=['GET', 'POST'])
+@app.route('/predict_tomato', methods=['POST'])
 def predict_tomato():
-    if request.method == 'POST':
-        image_base64 = request.files['image'].read()
-        prediction, probability = predict_plant_tomato(image_base64, model_tomato, tomato_class_labels)
-        interpreted_result = {"class": prediction, "probability": probability}
-        return jsonify(interpreted_result)
-    else:
-        return render_template('predict_tomato.html')
+    image_base64 = request.files['image'].read()
+    prediction, _ = predict_plant_tomato(image_base64, model_tomato, tomato_class_labels)
+    return jsonify({"class": prediction})
 
-@app.route('/predict_potato', methods=['GET', 'POST'])
+@app.route('/predict_potato', methods=['POST'])
 def predict_potato():
-    if request.method == 'POST':
-        image_base64 = request.files['image'].read()
-        prediction, probability = predict_plant_potato(image_base64, model_potato, potato_class_labels)
-        interpreted_result = {"class": prediction, "probability": probability}
-        return jsonify(interpreted_result)
-    else:
-        return render_template('predict_potato.html')
+    image_base64 = request.files['image'].read()
+    prediction, _ = predict_plant_potato(image_base64, model_potato, potato_class_labels)
+    return jsonify({"class": prediction})
+
+@app.route('/predict_tomato_class')
+def predict_tomato_class():
+    return render_template('predict_tomato_class.html')
+
+@app.route('/predict_potato_class')
+def predict_potato_class():
+    return render_template('predict_potato_class.html')
 
 if __name__ == '__main__':
     app.run()
