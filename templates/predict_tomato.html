@@ -7,11 +7,30 @@
 </head>
 <body>
     <h1>Predict Tomato Crop Disease</h1>
-    <form action="/predict_tomato" method="post" enctype="multipart/form-data">
+    <form action="/predict_tomato" method="post" enctype="multipart/form-data" id="predictionForm">
         <label for="image">Upload an image:</label>
         <input type="file" id="image" name="image" accept="image/*" required>
         <br>
         <input type="submit" value="Predict">
     </form>
+    <div id="predictionResult"></div>
+
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+
+            // Assuming you're using Fetch API
+            const response = await fetch('/predict_tomato', {
+                method: 'POST',
+                body: formData
+            });
+
+            const prediction = await response.text();
+
+            // Display the prediction
+            document.getElementById('predictionResult').innerText = `Predicted Class: ${prediction}`;
+        });
+    </script>
 </body>
 </html>
