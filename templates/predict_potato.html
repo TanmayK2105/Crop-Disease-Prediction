@@ -13,8 +13,15 @@
         <br>
         <input type="submit" value="Predict">
     </form>
-    {% if prediction %}
-        <p>Predicted Class: {{ prediction }}</p>
-    {% endif %}
+    <div id="predictionResult">
+        <!-- Predicted class will be displayed here -->
+    </div>
+    <script>
+        // JavaScript to update the prediction result dynamically
+        {% if prediction %}
+            var predictionElement = document.getElementById('predictionResult');
+            predictionElement.innerHTML = "<p>Predicted Class: {{ prediction }}</p>";
+        {% endif %}
+    </script>
 </body>
 </html>
