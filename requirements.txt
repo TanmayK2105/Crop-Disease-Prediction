@@ -1,7 +1,8 @@
-flask
-gunicorn 
-tensorflow==2.1.0
-keras==2.1.0
-protobuf==3.2.0
-pillow
-numpy
+Flask==2.0.1
+protobuf=3.2.0
+tensorflow==2.7.0
+numpy==1.21.2
+Pillow==8.3.1
+gevent==21.8.0
+gunicorn==20.1.0
+
