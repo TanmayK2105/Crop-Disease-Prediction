@@ -1,6 +1,6 @@
 
 flask
 gunicorn 
-tensorflow==2.1.0
+tensorflow
 pillow
-numpy==1.24.3
+numpy
