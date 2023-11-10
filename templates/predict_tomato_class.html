@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predict Tomato Crop Class</title>
+</head>
+<body>
+    <h1>Predict Tomato Crop Class</h1>
+    <div id="predictionResult">
+        <!-- Predicted class will be displayed here -->
+    </div>
+
+    <script>
+        // JavaScript to update the prediction result dynamically
+        {% if prediction %}
+            var predictionElement = document.getElementById('predictionResult');
+            predictionElement.innerHTML = "<p>Predicted Class: {{ prediction }}</p>";
+        {% endif %}
+    </script>
+</body>
+</html>
