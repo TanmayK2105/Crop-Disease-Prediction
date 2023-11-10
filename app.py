@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, render_template
 import numpy as np
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
@@ -12,9 +12,9 @@ model_potato = load_model('potatoes.h5')
 
 # Class labels for tomato and potato models
 tomato_class_labels = ["Tomato - Bacteria Spot Disease", "Tomato - Early Blight Disease", "Tomato - Healthy and Fresh",
-                       "Tomato - Late Blight Disease", "Tomato - Leaf Mold Disease", "Tomato - Septoria Leaf Spot Disease",
-                       "Tomato - Target Spot Disease", "Tomato - Tomoato Yellow Leaf Curl Virus Disease",
-                       "Tomato - Tomato Mosaic Virus Disease", "Tomato - Two Spotted Spider Mite Disease"]
+                           "Tomato - Late Blight Disease", "Tomato - Leaf Mold Disease", "Tomato - Septoria Leaf Spot Disease",
+                           "Tomato - Target Spot Disease", "Tomato - Tomoato Yellow Leaf Curl Virus Disease",
+                           "Tomato - Tomato Mosaic Virus Disease", "Tomato - Two Spotted Spider Mite Disease"]
 
 potato_class_labels = ['Potato___Early_blight', 'Potato___Late_blight', 'Potato___healthy']
 
@@ -37,6 +37,7 @@ def predict_plant_potato(image_base64, model, class_labels):
     probability = float(np.max(result))
     return predicted_class, probability
 
+
 def interpret_prediction(prediction, class_labels):
     max_index = np.argmax(prediction)
     max_class = class_labels[max_index]
@@ -48,52 +49,21 @@ def interpret_prediction(prediction, class_labels):
 def home():
     return render_template('index.html')
 
-@app.route('/predict_tomato', methods=['POST'])
+@app.route('/predict_tomato', methods=['GET', 'POST'])
 def predict_tomato():
+    prediction = None
     if request.method == 'POST':
-        image_file = request.files['image']
-        
-        # Check if the file is provided and has an allowed extension
-        if image_file and allowed_file(image_file.filename):
-            # Read the file content as bytes
-            image_base64 = image_file.read()
-            
-            # Predict using the model
-            prediction, probability = predict_plant_tomato(image_base64, model_tomato, tomato_class_labels)
-            
-            # Return the result
-            interpreted_result = {"class": prediction, "probability": probability}
-            return jsonify(interpreted_result)
-        
-        return jsonify({"error": "Invalid file"}), 400
+        image_base64 = request.files['image'].read()
+        prediction, probability = predict_plant_tomato(image_base64, model_tomato, tomato_class_labels)
+    return render_template('predict_tomato.html', prediction=prediction)
 
-    return jsonify({"error": "Method not allowed"}), 405
-
-@app.route('/predict_potato', methods=['POST'])
+@app.route('/predict_potato', methods=['GET', 'POST'])
 def predict_potato():
+    prediction = None
     if request.method == 'POST':
-        image_file = request.files['image']
-        
-        # Check if the file is provided and has an allowed extension
-        if image_file and allowed_file(image_file.filename):
-            # Read the file content as bytes
-            image_base64 = image_file.read()
-            
-            # Predict using the model
-            prediction, probability = predict_plant_potato(image_base64, model_potato, potato_class_labels)
-            
-            # Return the result
-            interpreted_result = {"class": prediction, "probability": probability}
-            return jsonify(interpreted_result)
-        
-        return jsonify({"error": "Invalid file"}), 400
-
-    return jsonify({"error": "Method not allowed"}), 405
-
-# Define a function to check if the file has an allowed extension
-def allowed_file(filename):
-    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+        image_base64 = request.files['image'].read()
+        prediction, probability = predict_plant_potato(image_base64, model_potato, potato_class_labels)
+    return render_template('predict_potato.html', prediction=prediction)
 
 if __name__ == '__main__':
     app.run()
