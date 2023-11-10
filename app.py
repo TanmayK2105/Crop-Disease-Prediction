@@ -57,16 +57,24 @@ def predict_tomato():
     prediction = None
     if request.method == 'POST':
         image_base64 = request.files['image'].read()
+        print("Received image_base64:", image_base64[:50])  # Print the first 50 characters for debugging
         prediction, probability = predict_plant_tomato(image_base64, model_tomato, tomato_class_labels)
+        print("Prediction:", prediction)
+        print("Probability:", probability)
     return render_template('predict_tomato.html', prediction=prediction)
+
 
 @app.route('/predict_potato', methods=['GET', 'POST'])
 def predict_potato():
     prediction = None
     if request.method == 'POST':
         image_base64 = request.files['image'].read()
+        print("Received image_base64:", image_base64[:50])  # Print the first 50 characters for debugging
         prediction, probability = predict_plant_potato(image_base64, model_potato, potato_class_labels)
+        print("Prediction:", prediction)
+        print("Probability:", probability)
     return render_template('predict_potato.html', prediction=prediction)
+
 
 if __name__ == '__main__':
     app.run()
