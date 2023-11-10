@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template
 import numpy as np
+from PIL import Image 
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 import io
@@ -19,18 +20,20 @@ tomato_class_labels = ["Tomato - Bacteria Spot Disease", "Tomato - Early Blight 
 potato_class_labels = ['Potato___Early_blight', 'Potato___Late_blight', 'Potato___healthy']
 
 def predict_plant_tomato(image_bytes, model, class_labels):
-    img = image.load_img(io.BytesIO(image_bytes), target_size=(128, 128))
-    img_array = image.img_to_array(img) / 255
-    img_array = np.expand_dims(img_array, axis=0)
+    img = Image.open(io.BytesIO(image_bytes)).convert('RGB')
+    img = img.resize((128, 128))  # Resize the image to match the model's expected sizing
+    img_array = np.array(img) / 255.0  # Normalize the image
+    img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
     result = model.predict(img_array)
     pred = np.argmax(result, axis=1)
     predicted_class = class_labels[int(pred)]
-    probability = float(result[0, int(pred)])  # Extract the probability for the predicted class
+    probability = float(result[0, int(pred)])
     return predicted_class, probability
 
-def predict_plant_tomato(image_bytes, model, class_labels):
-    img = image.load_img(io.BytesIO(image_bytes), target_size=(256, 256))
-    img_array = image.img_to_array(img)
+def predict_plant_potato(image_bytes, model, class_labels):
+    img = Image.open(io.BytesIO(image_bytes)).convert('RGB')
+    img = img.resize((256, 256))
+    img_array = np.array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
     result = model.predict(img_array)
     predicted_class = class_labels[np.argmax(result)]
