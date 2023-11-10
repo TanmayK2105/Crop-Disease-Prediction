@@ -1,5 +1,4 @@
-python3==3.9.18
-pip3
+
 flask
 gunicorn 
 tensorflow==2.1.0
