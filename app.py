@@ -14,9 +14,10 @@ model_potato = load_model('potatoes.h5')
 tomato_class_labels = ["Tomato - Bacteria Spot Disease","Tomato - Early Blight Disease","Tomato - Healthy and Fresh","Tomato - Late Blight Disease","Tomato - Leaf Mold Disease","Tomato - Septoria Leaf Spot Disease","Tomato - Target Spot Disease","Tomato - Tomoato Yellow Leaf Curl Virus Disease","Tomato - Tomato Mosaic Virus Disease","Tomato - Two Spotted Spider Mite Disease"]  # Update with actual class labels
 potato_class_labels = ['Potato___Early_blight', 'Potato___Late_blight', 'Potato___healthy']  # Update with actual class labels
 
-def predict_plant_tomato(image_base64, model, class_labels):
-    img = image.load_img(io.BytesIO(image_base64), target_size=(128, 128))
-    img_array = image.img_to_array(img) / 255
+def predict_plant_tomato(image_bytes, model, class_labels):
+    img = Image.open(io.BytesIO(image_bytes)).convert('RGB')
+    img = img.resize((128, 128))  # Resize the image to match the model's expected sizing
+    img_array = np.array(img) / 255.0  # Normalize the image
     img_array = np.expand_dims(img_array, axis=0)
     result = model.predict(img_array)
     pred = np.argmax(result, axis=1)
@@ -24,9 +25,10 @@ def predict_plant_tomato(image_base64, model, class_labels):
     probability = float(result[0, int(pred)])  # Extract the probability for the predicted class
     return predicted_class, probability
 
-def predict_plant_potato(image_base64, model, class_labels):
-    img = image.load_img(io.BytesIO(image_base64), target_size=(256, 256))
-    img_array = image.img_to_array(img)
+def predict_plant_potato(image_bytes, model, class_labels):
+    img = Image.open(io.BytesIO(image_bytes)).convert('RGB')
+    img = img.resize((256, 256))
+    img_array = np.array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
     result = model.predict(img_array)
     predicted_class = class_labels[np.argmax(result)]
