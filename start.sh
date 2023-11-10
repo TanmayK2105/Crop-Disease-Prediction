@@ -1,1 +1,2 @@
-gunicorn app:app -w 1 --log-file -
+gunicorn -w 4 -b 0.0.0.0:8000 -k gevent wsgi:app
+
