@@ -42,25 +42,33 @@ def predict_plant_potato(image_bytes, model, class_labels):
 def home():
     return render_template('index.html')
 
-@app.route('/predict_tomato', methods=['GET','POST'])
+@app.route('/predict_tomato', methods=['POST'])
 def predict_tomato():
-    image_base64 = request.files['image'].read()
-    prediction, _ = predict_plant_tomato(image_base64, model_tomato, tomato_class_labels)
-    return jsonify({"class": prediction})
+    try:
+        if 'image' not in request.files:
+            return "Error: No image file provided."
 
-@app.route('/predict_potato', methods=['GET','POST'])
+        image_base64 = request.files['image'].read()
+        prediction, _ = predict_plant_tomato(image_base64, model_tomato, tomato_class_labels)
+        return f"Predicted Class: {prediction}"
+
+    except Exception as e:
+        print(f"Error processing tomato prediction: {str(e)}")
+        return f"Error: {str(e)}"
+
+@app.route('/predict_potato', methods=['POST'])
 def predict_potato():
-    image_base64 = request.files['image'].read()
-    prediction, _ = predict_plant_potato(image_base64, model_potato, potato_class_labels)
-    return jsonify({"class": prediction})
+    try:
+        if 'image' not in request.files:
+            return "Error: No image file provided."
 
-@app.route('/predict_tomato_class',methods=['GET','POST'])
-def predict_tomato_class():
-    return render_template('predict_tomato_class.html')
+        image_base64 = request.files['image'].read()
+        prediction, _ = predict_plant_potato(image_base64, model_potato, potato_class_labels)
+        return f"Predicted Class: {prediction}"
 
-@app.route('/predict_potato_class',methods=['GET','POST'])
-def predict_potato_class():
-    return render_template('predict_potato_class.html')
+    except Exception as e:
+        print(f"Error processing potato prediction: {str(e)}")
+        return f"Error: {str(e)}"
 
 if __name__ == '__main__':
     app.run()

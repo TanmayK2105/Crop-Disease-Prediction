@@ -6,25 +6,24 @@
     <title>Crop Disease Prediction</title>
 </head>
 <body>
-<script>
-window.embeddedChatbotConfig = {
-chatbotId: "PU1HIH9AXgIu663i5z4SP",
-domain: "www.chatbase.co"
-}
-</script>
-<script
-src="https://www.chatbase.co/embed.min.js"
-chatbotId="PU1HIH9AXgIu663i5z4SP"
-domain="www.chatbase.co"
-defer>
-</script>
     <h1>Welcome to Crop Disease Prediction!</h1>
     <h2>Please select the crop you want to predict:</h2>
-    <form action="/predict_tomato",method="post", enctype="multipart/form-data">
-        <button type="submit">Tomato</button>
-    </form>
-    <form action="/predict_potato",method="post",enctype="multipart/form-data">
-        <button type="submit">Potato</button>
-    </form>
+    <!-- For predicting tomato -->
+<form action="/predict_tomato" method="post" enctype="multipart/form-data">
+    <label for="image">Upload an image:</label>
+    <input type="file" id="image" name="image" accept="image/*" required>
+    <br>
+    <button type="submit">Tomato</button>
+</form>
+
+<!-- For predicting potato -->
+<form action="/predict_potato" method="post" enctype="multipart/form-data">
+    <label for="image">Upload an image:</label>
+    <input type="file" id="image" name="image" accept="image/*" required>
+    <br>
+    <button type="submit">Potato</button>
+</form>
+
+    
 </body>
 </html>
