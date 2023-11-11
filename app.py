@@ -1,47 +1,30 @@
 from flask import Flask, request, jsonify, render_template
 import numpy as np
-from PIL import Image
+from PIL import Image 
 from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing import image
 import io
-import os
+from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
-# Get the absolute path to the directory containing this script
-script_dir = os.path.dirname(os.path.abspath(__file__))
-
-# Load models using absolute paths
-model_tomato_path = os.path.join(script_dir, 'model.h5')
-model_potato_path = os.path.join(script_dir, 'potatoes.h5')
-
-# Check if model files exist
-if not os.path.exists(model_tomato_path):
-    raise FileNotFoundError(f"Model file not found: {model_tomato_path}")
-
-if not os.path.exists(model_potato_path):
-    raise FileNotFoundError(f"Model file not found: {model_potato_path}")
-
 # Load models
-model_tomato = load_model(model_tomato_path)
-model_potato = load_model(model_potato_path)
+model_tomato = load_model('model.h5')
+model_potato = load_model('potatoes.h5')
 
 # Class labels for tomato and potato models
-tomato_class_labels = ["Tomato - Bacteria Spot Disease", "Tomato - Early Blight Disease", "Tomato - Healthy and Fresh",
-                       "Tomato - Late Blight Disease", "Tomato - Leaf Mold Disease", "Tomato - Septoria Leaf Spot Disease",
-                       "Tomato - Target Spot Disease", "Tomato - Tomato Yellow Leaf Curl Virus Disease",
-                       "Tomato - Tomato Mosaic Virus Disease", "Tomato - Two Spotted Spider Mite Disease"]
-
-potato_class_labels = ['Potato___Early_blight', 'Potato___Late_blight', 'Potato___healthy']
+tomato_class_labels = ["Tomato - Bacteria Spot Disease","Tomato - Early Blight Disease","Tomato - Healthy and Fresh","Tomato - Late Blight Disease","Tomato - Leaf Mold Disease","Tomato - Septoria Leaf Spot Disease","Tomato - Target Spot Disease","Tomato - Tomoato Yellow Leaf Curl Virus Disease","Tomato - Tomato Mosaic Virus Disease","Tomato - Two Spotted Spider Mite Disease"]  # Update with actual class labels
+potato_class_labels = ['Potato___Early_blight', 'Potato___Late_blight', 'Potato___healthy']  # Update with actual class labels
 
 def predict_plant_tomato(image_bytes, model, class_labels):
     img = Image.open(io.BytesIO(image_bytes)).convert('RGB')
-    img = img.resize((128, 128))
-    img_array = np.array(img) / 255.0
+    img = img.resize((128, 128))  # Resize the image to match the model's expected sizing
+    img_array = np.array(img) / 255.0  # Normalize the image
     img_array = np.expand_dims(img_array, axis=0)
     result = model.predict(img_array)
     pred = np.argmax(result, axis=1)
     predicted_class = class_labels[int(pred)]
-    probability = float(result[0, int(pred)])
+    probability = float(result[0, int(pred)])  # Extract the probability for the predicted class
     return predicted_class, probability
 
 def predict_plant_potato(image_bytes, model, class_labels):
@@ -52,7 +35,7 @@ def predict_plant_potato(image_bytes, model, class_labels):
     result = model.predict(img_array)
     pred = np.argmax(result, axis=1)
     predicted_class = class_labels[int(pred)]
-    probability = float(result[0, int(pred)])
+    probability = float(result[0, int(pred)])  # Extract the probability for the predicted class
     return predicted_class, probability
 
 @app.route('/')
@@ -88,4 +71,4 @@ def predict_potato():
         return f"Error: {str(e)}"
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0',port=8080)
