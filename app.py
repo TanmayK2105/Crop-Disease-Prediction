@@ -42,23 +42,23 @@ def predict_plant_potato(image_bytes, model, class_labels):
 def home():
     return render_template('index.html')
 
-@app.route('/predict_tomato', methods=['POST'])
+@app.route('/predict_tomato', methods=['GET','POST'])
 def predict_tomato():
     image_base64 = request.files['image'].read()
     prediction, _ = predict_plant_tomato(image_base64, model_tomato, tomato_class_labels)
     return jsonify({"class": prediction})
 
-@app.route('/predict_potato', methods=['POST'])
+@app.route('/predict_potato', methods=['GET','POST'])
 def predict_potato():
     image_base64 = request.files['image'].read()
     prediction, _ = predict_plant_potato(image_base64, model_potato, potato_class_labels)
     return jsonify({"class": prediction})
 
-@app.route('/predict_tomato_class')
+@app.route('/predict_tomato_class',methods=['GET','POST'])
 def predict_tomato_class():
     return render_template('predict_tomato_class.html')
 
-@app.route('/predict_potato_class')
+@app.route('/predict_potato_class',methods=['GET','POST'])
 def predict_potato_class():
     return render_template('predict_potato_class.html')
 
