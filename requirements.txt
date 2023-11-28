@@ -1,3 +1,4 @@
+pip
 flask==2.3.0
 tensorflow==2.14.0
 numpy==1.24.3
