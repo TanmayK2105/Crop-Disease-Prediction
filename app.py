@@ -7,22 +7,18 @@ from flask import send_from_directory
 from tensorflow.keras.optimizers import Adam
 
 
-def custom_optimizer():
-    return Adam()
-
-
 app = Flask(__name__)
 
 # Load models for different plants
 model_tomato = load_model('tomato.h5')
 model_potato = load_model('potatoes.h5')
-model_apple = load_model('apple.h5', custom_objects={'Adam': custom_optimizer})
-model_grapes = load_model('grapes_disease_model_with_early_stopping.h5', custom_objects={'Adam': custom_optimizer})
+model_apple = load_model('apple.h5', custom_objects={'Adam': Adam})
+model_grapes = load_model('grapes_disease_model_with_early_stopping.h5', custom_objects={'Adam': Adam})
 # model_oranges = load_model('model_oranges.h5')
 # model_soybean = load_model('model_soybean.h5')
 # model_strawberry = load_model('model_strawberry.h5')
 # model_peach = load_model('model_peach.h5')
-model_corn = load_model('corn.h5', custom_objects={'Adam': custom_optimizer})
+model_corn = load_model('corn.h5', custom_objects={'Adam': Adam})
 
 # Class labels for different plants
 tomato_class_labels = ["Tomato : Bacterial Spot", "Tomato : Early Blight", "Tomato : Healthy", "Tomato : Late Blight", "Tomato : Leaf Mold", "Tomato : Septoria Leaf Spot", "Tomato : Target Spot", "Tomato : Yellow Leaf Curl Virus", "Tomato : Mosaic Virus", "Tomato : Spider Mites | Two-Spotted Spider Mite"]
