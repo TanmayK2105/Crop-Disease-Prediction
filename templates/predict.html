@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predict Crop Disease</title>
+    <style>
+        .relatedImages {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .relatedImage {
+            max-width: 100px;
+            max-height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Predict {{ crop_type }} Crop Class</h1>
+    
+    <div id="predictionResult">
+        <p>Predicted Class: <span id="predictedDisease">{{ prediction }}</span></p>
+        <!-- Optionally, display the probability or other information -->
+        <!-- <p>Probability: <span id="probability"></span></p> -->
+        <p>Description: <span id="description"></span></p>
+        <p>Related Links:</p>
+        <div id="relatedLinks" class="relatedImages"></div>
+        <p>Supplement Name: <span id="supplementName"></span></p>
+        <p>Buy Link: <span id="buyLinkContainer"></span></p>
+        <p>Possible Steps: <span id="possibleSteps"></span></p>
+        <p>Supplement Image: <img id="supplementImage" alt="Supplement Image"></p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
+    <script>
+        // Load and parse the CSV file
+        Papa.parse('/get_csv/supplement_info.csv', {
+            download: true,
+            header: true,
+            complete: function (results) {
+                console.log('CSV data:', results.data); // Log the entire CSV data for debugging
+
+                // Access the predicted disease value from the span element
+                const predictedDisease = document.getElementById('predictedDisease').innerText;
+                console.log('Predicted Disease:', predictedDisease); // Log predicted disease for debugging
+
+                // Find the row in the CSV data for the predicted disease
+                const result = results.data.find(row => row['Disease name'] === predictedDisease);
+                console.log('Found result:', result); // Log the found result for debugging
+
+                // Display the predicted disease information
+                document.getElementById('predictedDisease').innerText = predictedDisease;
+
+                // Optionally, display other information
+                if (result) {
+                    document.getElementById('description').innerText = (result['Description'] || 'N/A');
+                    
+                    // Display related image links
+                    const relatedLinks = result['Related image links'];
+                    const relatedLinksContainer = document.getElementById('relatedLinks');
+                    if (relatedLinks) {
+                        const links = relatedLinks.split(',');
+                        links.forEach(link => {
+                            const imgElement = document.createElement('img');
+                            imgElement.src = link.trim();
+                            imgElement.alt = 'Related Image';
+                            imgElement.classList.add('relatedImage');
+                            relatedLinksContainer.appendChild(imgElement);
+                        });
+                    } else {
+                        relatedLinksContainer.innerHTML = 'N/A';
+                    }
+
+                    document.getElementById('supplementName').innerText =  (result['supplement name'] || 'N/A');
+
+                    // Create and display the Buy Link
+                    const buyLinkContainer = document.getElementById('buyLinkContainer');
+                    const buyLink = result['buy link'];
+                    if (buyLink) {
+                        const buyLinkElement = document.createElement('a');
+                        buyLinkElement.href = buyLink.trim();
+                        buyLinkElement.target = '_blank';  // Open link in a new tab
+                        buyLinkElement.innerText = 'Click to Buy';  // Change the link text as needed
+                        buyLinkContainer.appendChild(buyLinkElement);
+                    } else {
+                        buyLinkContainer.innerHTML = 'N/A';
+                    }
+
+                    document.getElementById('possibleSteps').innerText = (result['Possible Steps'] || 'N/A');
+
+                    // Display the supplement image if available
+                    const supplementImage = result['supplement image'];
+                    if (supplementImage) {
+                        const imgElement = document.getElementById('supplementImage');
+                        imgElement.src = supplementImage;
+                        imgElement.style.display = 'block';
+                    } else {
+                        document.getElementById('supplementImage').style.display = 'none';
+                    }
+                } else {
+                    console.log('Disease not found in CSV data');
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
