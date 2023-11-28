@@ -6,7 +6,7 @@ from tensorflow.keras.models import load_model
 from flask import send_from_directory
 from tensorflow.keras.optimizers import Adam
 
-
+ 
 app = Flask(__name__)
 
 # Load models for different plants
