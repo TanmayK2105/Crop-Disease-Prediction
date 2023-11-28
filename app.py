@@ -108,18 +108,18 @@ def predict():
         elif crop_type == 'grapes':
             prediction, _ = predict_plant(image_base64, model_grapes, grapes_class_labels)
             return render_template('predict.html', crop_type='Grapes', prediction=prediction)
-        elif crop_type == 'oranges':
-            prediction, _ = predict_plant(image_base64, model_oranges, oranges_class_labels)
-            return render_template('predict.html', crop_type='Oranges', prediction=prediction)
-        elif crop_type == 'soybean':
-            prediction, _ = predict_plant(image_base64, model_soybean, soybean_class_labels)
-            return render_template('predict.html', crop_type='Soybean', prediction=prediction)
-        elif crop_type == 'strawberry':
-            prediction, _ = predict_plant(image_base64, model_strawberry, strawberry_class_labels)
-            return render_template('predict.html', crop_type='Strawberry', prediction=prediction)
-        elif crop_type == 'peach':
-            prediction, _ = predict_plant(image_base64, model_peach, peach_class_labels)
-            return render_template('predict.html', crop_type='Peach', prediction=prediction)
+        # elif crop_type == 'oranges':
+        #     prediction, _ = predict_plant(image_base64, model_oranges, oranges_class_labels)
+        #     return render_template('predict.html', crop_type='Oranges', prediction=prediction)
+        # elif crop_type == 'soybean':
+        #     prediction, _ = predict_plant(image_base64, model_soybean, soybean_class_labels)
+        #     return render_template('predict.html', crop_type='Soybean', prediction=prediction)
+        # elif crop_type == 'strawberry':
+        #     prediction, _ = predict_plant(image_base64, model_strawberry, strawberry_class_labels)
+        #     return render_template('predict.html', crop_type='Strawberry', prediction=prediction)
+        # elif crop_type == 'peach':
+        #     prediction, _ = predict_plant(image_base64, model_peach, peach_class_labels)
+        #     return render_template('predict.html', crop_type='Peach', prediction=prediction)
         elif crop_type == 'corn':
             prediction, _ = predict_plant(image_base64, model_corn, corn_class_labels)
             return render_template('predict.html', crop_type='Corn', prediction=prediction)
