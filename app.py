@@ -12,13 +12,13 @@ app = Flask(__name__)
 # Load models for different plants
 model_tomato = load_model('tomato.h5')
 model_potato = load_model('potatoes.h5')
-model_apple = load_model('apple.h5', custom_objects={'Adam': Adam})
-model_grapes = load_model('grapes_disease_model_with_early_stopping.h5', custom_objects={'Adam': Adam})
+# model_apple = load_model('apple.h5', custom_objects={'Adam': Adam})
+# model_grapes = load_model('grapes_disease_model_with_early_stopping.h5', custom_objects={'Adam': Adam})
 # model_oranges = load_model('model_oranges.h5')
 # model_soybean = load_model('model_soybean.h5')
 # model_strawberry = load_model('model_strawberry.h5')
 # model_peach = load_model('model_peach.h5')
-model_corn = load_model('corn.h5', custom_objects={'Adam': Adam})
+# model_corn = load_model('corn.h5', custom_objects={'Adam': Adam})
 
 # Class labels for different plants
 tomato_class_labels = ["Tomato : Bacterial Spot", "Tomato : Early Blight", "Tomato : Healthy", "Tomato : Late Blight", "Tomato : Leaf Mold", "Tomato : Septoria Leaf Spot", "Tomato : Target Spot", "Tomato : Yellow Leaf Curl Virus", "Tomato : Mosaic Virus", "Tomato : Spider Mites | Two-Spotted Spider Mite"]
@@ -98,12 +98,12 @@ def predict():
         elif crop_type == 'potato':
             prediction, _ = predict_plant(image_base64, model_potato, potato_class_labels)
             return render_template('predict.html', crop_type='Potato', prediction=prediction)
-        elif crop_type == 'apple':
-            prediction, _ = predict_plant(image_base64, model_apple, apple_class_labels)
-            return render_template('predict.html', crop_type='Apple', prediction=prediction)
-        elif crop_type == 'grapes':
-            prediction, _ = predict_plant(image_base64, model_grapes, grapes_class_labels)
-            return render_template('predict.html', crop_type='Grapes', prediction=prediction)
+        # elif crop_type == 'apple':
+        #     prediction, _ = predict_plant(image_base64, model_apple, apple_class_labels)
+        #     return render_template('predict.html', crop_type='Apple', prediction=prediction)
+        # elif crop_type == 'grapes':
+        #     prediction, _ = predict_plant(image_base64, model_grapes, grapes_class_labels)
+        #     return render_template('predict.html', crop_type='Grapes', prediction=prediction)
         # elif crop_type == 'oranges':
         #     prediction, _ = predict_plant(image_base64, model_oranges, oranges_class_labels)
         #     return render_template('predict.html', crop_type='Oranges', prediction=prediction)
@@ -116,9 +116,9 @@ def predict():
         # elif crop_type == 'peach':
         #     prediction, _ = predict_plant(image_base64, model_peach, peach_class_labels)
         #     return render_template('predict.html', crop_type='Peach', prediction=prediction)
-        elif crop_type == 'corn':
-            prediction, _ = predict_plant(image_base64, model_corn, corn_class_labels)
-            return render_template('predict.html', crop_type='Corn', prediction=prediction)
+        # elif crop_type == 'corn':
+        #     prediction, _ = predict_plant(image_base64, model_corn, corn_class_labels)
+        #     return render_template('predict.html', crop_type='Corn', prediction=prediction)
         else:
             return render_template('error.html', message="Error: Invalid crop type.")
 
